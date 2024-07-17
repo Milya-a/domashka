@@ -1,21 +1,23 @@
-from src.processing import data, filter_by_state, sort_by_date
+import pytest
+
+from src.widget import get_data, mask_account_card
 
 
-def test_filter_by_state() -> None:
-    assert filter_by_state(data)
+@pytest.mark.parametrize(
+    "string, expected_result",
+    [
+        ("MasterCard 7158300734726758", "MasterCard 715830******6758"),
+        ("Счет 12345678901234567890", "Счет**7890"),
+    ],
+)
+def test_mask_account_card(string: str, expected_result: str) -> None:
+    assert mask_account_card(string) == expected_result
 
 
-def test_filter_by_state_1() -> None:
-    assert filter_by_state(data, "EXECUTED") == [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-    ]
+@pytest.fixture
+def date() -> str:
+    return "2018-07-11T02:26:18.671407"
 
 
-def test_filter_by_state_sort() -> None:
-    assert sort_by_date(data) == [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-    ]
+def test_get_data(date: str) -> None:
+    assert get_data(date) == "11.07.2018"
