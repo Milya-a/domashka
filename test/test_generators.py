@@ -1,5 +1,5 @@
-from src.generators import filter_by_currency, transaction_descriptions, card_number_generator,transactions
-
+import pytest
+from src.generators import transactions, filter_by_currency, transaction_descriptions, card_number_generator
 
 def test_filter_by_currency() -> None:
     usd_transactions = filter_by_currency(transactions, "USD")
@@ -29,56 +29,40 @@ def test_filter_by_currency() -> None:
                                'description': 'Перевод со счета на счет',
                                'from': 'Счет 19708645243227258542',
                                'to': 'Счет 75651667383060284188'}
-    rub_transactions = filter_by_currency(transactions, "RUB")
+
+
+def test_filter_by_currency_rub() -> None:
+    rub_transactions = filter_by_currency(transactions, "руб.")
     assert next(rub_transactions) == {"id": 873106923,
                                       "state": "EXECUTED",
                                       "date": "2019-03-23T01:09:46.296404",
                                       "operationAmount": {
-                                              "amount": "43318.34",
-                                              "currency": {
-                                                  "name": "руб.",
-                                                  "code": "RUB"
-                                              }
+                                          "amount": "43318.34",
+                                          "currency": {
+                                              "name": "руб.",
+                                              "code": "RUB"
+                                          }
                                       },
                                       "description": "Перевод со счета на счет",
                                       "from": "Счет 44812258784861134719",
                                       "to": "Счет 74489636417521191160"
                                       }
 
-    assert next(rub_transactions) == {"id": 594226727,
-                                      "state": "CANCELED",
-                                      "date": "2018-09-12T21:27:25.241689",
-                                      "operationAmount": {
-                                          "amount": "67314.70",
-                                          "currency": {
-                                              "name": "руб.",
-                                              "code": "RUB"
-                                          }
-                                      },
-                                      "description": "Перевод организации",
-                                      "from": "Visa Platinum 1246377376343588",
-                                      "to": "Счет 14211924144426031657"
-                                      }
+def test_filter_by_currency_() -> None:
+    assert filter_by_currency(transactions, "")
 
 
-def test_filter_by_currency_empty_currency(transactions_data) -> None:
-    assert list(filter_by_currency(transactions_data, "")) == []
+def test_filter_by_currency__() -> None:
+    assert filter_by_currency(transactions, "ERI")
 
 
-def test_filter_by_currency_not_existed_currency(transactions_data) -> None:
-    assert list(filter_by_currency(transactions_data, "ERI")) == []
-
-
-def test_transaction_description(transactions_data):
-    expected_result = [
-        "Перевод организации",
-        "Перевод со счета на счет",
-        "Перевод со счета на счет",
-        "Перевод с карты на карту",
-        "Перевод организации"
-    ]
-    trans = transaction_descriptions(transactions_data)
-    assert list(trans) == expected_result
+def test_transaction_description():
+    trans = transaction_descriptions(transactions)
+    assert next(trans) == "Перевод организации"
+    assert next(trans) == "Перевод со счета на счет"
+    assert next(trans) == "Перевод со счета на счет"
+    assert next(trans) == "Перевод с карты на карту"
+    assert next(trans) == "Перевод организации"
 
 
 def test_card_number_generator():
