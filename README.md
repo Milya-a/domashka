@@ -6,7 +6,7 @@
 
 ## Установка:
 
-1. Скачайте проект с GitHub по ссылке [Проект "Виджет"](https://github.com/ViktorSP-byte/widget).
+1. Скачайте проект с GitHub по ссылке [Проект "Виджет"](https://github.com/Milya-a/domashka/tree/feature/homework_11_1).
 2. Запустите папку с проектом в программе **PyCharm**.
 
 ## Использование:
