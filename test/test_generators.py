@@ -64,8 +64,16 @@ def test_transaction_description():
     assert next(trans) == "Перевод с карты на карту"
     assert next(trans) == "Перевод организации"
 
-
-def test_card_number_generator():
+@pytest.mark.parametrize("expected",
+                         [
+                             ("0000 0000 0000 0001"),
+                             ("0000 0000 0000 0002"),
+                             ("0000 0000 0000 0003"),
+                             ("0000 0000 0000 0004"),
+                             ("0000 0000 0000 0005")
+                         ]
+                         )
+def test_card_number_generator(expected):
     num = card_number_generator(x=1, y=5)
     assert next(num) == "0000 0000 0000 0001"
     assert next(num) == "0000 0000 0000 0002"
